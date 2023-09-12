@@ -35,11 +35,9 @@ interface SocketData {
   playerNumber: number;
 }
 
-//----
-
 const { initGame, gameLoop, getUpdatedVelocity } = require("./game.js");
 const { FRAME_RATE } = require("./constants");
-const { makeid } = require("./utils");
+const { makeId } = require("./utils");
 
 const states = new Map<string, State>();
 const clientRooms = new Map<string, string>();
@@ -72,7 +70,7 @@ io.on("connection", (client) => {
   }
 
   function handleNewGame() {
-    let roomName = makeid(5);
+    let roomName = makeId(5);
     clientRooms.set(client.id, roomName);
     client.emit("gameCode", roomName);
 

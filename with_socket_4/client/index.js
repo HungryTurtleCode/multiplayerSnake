@@ -1,6 +1,6 @@
-const BG_COLOUR = "#231f20";
-const SNAKE_COLOUR = "#c2c2c2";
-const FOOD_COLOUR = "#e66916";
+const BG_COLOR = "#231f20";
+const SNAKE_COLOR = "#c2c2c2";
+const FOOD_COLOR = "#e66916";
 
 const socket = io("http://localhost:3000/");
 
@@ -45,7 +45,7 @@ function init() {
 
   canvas.width = canvas.height = 600;
 
-  ctx.fillStyle = BG_COLOUR;
+  ctx.fillStyle = BG_COLOR;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   document.addEventListener("keydown", keydown);
@@ -57,24 +57,24 @@ function keydown(e) {
 }
 
 function paintGame(state) {
-  ctx.fillStyle = BG_COLOUR;
+  ctx.fillStyle = BG_COLOR;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const food = state.food;
-  const gridsize = state.gridsize;
-  const size = canvas.width / gridsize;
+  const gridSize = state.gridSize;
+  const size = canvas.width / gridSize;
 
-  ctx.fillStyle = FOOD_COLOUR;
+  ctx.fillStyle = FOOD_COLOR;
   ctx.fillRect(food.x * size, food.y * size, size, size);
 
-  paintPlayer(state.players[0], size, SNAKE_COLOUR);
+  paintPlayer(state.players[0], size, SNAKE_COLOR);
   paintPlayer(state.players[1], size, "red");
 }
 
-function paintPlayer(playerState, size, colour) {
+function paintPlayer(playerState, size, color) {
   const snake = playerState.snake;
 
-  ctx.fillStyle = colour;
+  ctx.fillStyle = color;
   for (let cell of snake) {
     ctx.fillRect(cell.x * size, cell.y * size, size, size);
   }
