@@ -1,17 +1,13 @@
-import { Server } from "socket.io";
-import { FRAME_RATE } from "./constants";
-import { makeId } from "./utils";
-import { initGame, gameLoop, getUpdatedVelocity } from "./game.js";
+import { Server } from 'socket.io';
+import { FRAME_RATE } from './constants';
+import { makeId } from './utils';
+import { initGame, gameLoop, getUpdatedVelocity } from './game.js';
+import { State } from './models/state';
 
-const io = new Server<
-  ClientToServerEvents,
-  ServerToClientEvents,
-  InterServerEvents,
-  SocketData
->({
+const io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>({
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
+    origin: '*',
+    methods: ['GET', 'POST'],
   },
 });
 
@@ -41,21 +37,21 @@ interface SocketData {
 const states = new Map<string, State>();
 const clientRooms = new Map<string, string>();
 
-io.on("connection", (client) => {
-  client.on("keydown", handleKeydown);
-  client.on("newGame", handleNewGame);
-  client.on("joinGame", handleJoinGame);
+io.on('connection', (client) => {
+  client.on('keydown', handleKeydown);
+  client.on('newGame', handleNewGame);
+  client.on('joinGame', handleJoinGame);
 
   function handleJoinGame(roomName: string) {
     const room = io.sockets.adapter.rooms.get(roomName);
 
-    let numClients = room?.size ?? 0;
+    const numClients = room?.size ?? 0;
 
     if (numClients === 0) {
-      client.emit("unknownCode");
+      client.emit('unknownCode');
       return;
     } else if (numClients > 1) {
-      client.emit("tooManyPlayers");
+      client.emit('tooManyPlayers');
       return;
     }
 
@@ -63,21 +59,21 @@ io.on("connection", (client) => {
 
     client.join(roomName);
     client.data.playerNumber = 2;
-    client.emit("init", 2);
+    client.emit('init', 2);
 
     startGameInterval(roomName);
   }
 
   function handleNewGame() {
-    let roomName = makeId(5);
+    const roomName = makeId(5);
     clientRooms.set(client.id, roomName);
-    client.emit("gameCode", roomName);
+    client.emit('gameCode', roomName);
 
     states.set(roomName, initGame());
 
     client.join(roomName);
     client.data.playerNumber = 1;
-    client.emit("init", 1);
+    client.emit('init', 1);
   }
 
   function handleKeydown(keyCode: string) {
@@ -118,13 +114,11 @@ function startGameInterval(roomName: string) {
 
 function emitGameState(roomName: string, gameState: State) {
   // Send this event to everyone in the room.
-  io.sockets.in(roomName).emit("gameState", JSON.stringify(gameState));
+  io.sockets.in(roomName).emit('gameState', JSON.stringify(gameState));
 }
 
 function emitGameOver(roomName: string, winnerPlayerNumber: number) {
-  io.sockets
-    .in(roomName)
-    .emit("gameOver", JSON.stringify({ winnerPlayerNumber }));
+  io.sockets.in(roomName).emit('gameOver', JSON.stringify({ winnerPlayerNumber }));
 }
 
 io.listen(parseInt(process.env.PORT) || 3000);

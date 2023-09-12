@@ -1,4 +1,5 @@
-import { GRID_SIZE } from "./constants";
+import { GRID_SIZE } from './constants';
+import { State } from './models/state';
 
 export function initGame(): State {
   const state = createGameState();
@@ -46,21 +47,11 @@ export function gameLoop(state: State): false | number {
   playerTwo.pos.x += playerTwo.vel.x;
   playerTwo.pos.y += playerTwo.vel.y;
 
-  if (
-    playerOne.pos.x < 0 ||
-    playerOne.pos.x > GRID_SIZE ||
-    playerOne.pos.y < 0 ||
-    playerOne.pos.y > GRID_SIZE
-  ) {
+  if (playerOne.pos.x < 0 || playerOne.pos.x > GRID_SIZE || playerOne.pos.y < 0 || playerOne.pos.y > GRID_SIZE) {
     return 2;
   }
 
-  if (
-    playerTwo.pos.x < 0 ||
-    playerTwo.pos.x > GRID_SIZE ||
-    playerTwo.pos.y < 0 ||
-    playerTwo.pos.y > GRID_SIZE
-  ) {
+  if (playerTwo.pos.x < 0 || playerTwo.pos.x > GRID_SIZE || playerTwo.pos.y < 0 || playerTwo.pos.y > GRID_SIZE) {
     return 1;
   }
 
@@ -79,7 +70,7 @@ export function gameLoop(state: State): false | number {
   }
 
   if (playerOne.vel.x || playerOne.vel.y) {
-    for (let cell of playerOne.snake) {
+    for (const cell of playerOne.snake) {
       if (cell.x === playerOne.pos.x && cell.y === playerOne.pos.y) {
         return 2;
       }
@@ -90,7 +81,7 @@ export function gameLoop(state: State): false | number {
   }
 
   if (playerTwo.vel.x || playerTwo.vel.y) {
-    for (let cell of playerTwo.snake) {
+    for (const cell of playerTwo.snake) {
       if (cell.x === playerTwo.pos.x && cell.y === playerTwo.pos.y) {
         return 1;
       }
@@ -147,13 +138,13 @@ function randomFood(state: State) {
     y: Math.floor(Math.random() * GRID_SIZE),
   };
 
-  for (let cell of state.players[0].snake) {
+  for (const cell of state.players[0].snake) {
     if (cell.x === food.x && cell.y === food.y) {
       return randomFood(state);
     }
   }
 
-  for (let cell of state.players[1].snake) {
+  for (const cell of state.players[1].snake) {
     if (cell.x === food.x && cell.y === food.y) {
       return randomFood(state);
     }

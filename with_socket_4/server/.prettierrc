@@ -1,0 +1,28 @@
+{
+  "useTabs": false,
+  "printWidth": 140,
+  "overrides": [
+    {
+      "files": "*.html",
+      "options": {
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": ["*.ts", "*.scss", "*.js", "*.md"],
+      "options": {
+        "singleQuote": true,
+        "printWidth": 140,
+        "endOfLine": "auto",
+        "trailingComma": "es5"
+      }
+    },
+    {
+      "files": ["*.json", "*.webmanifest"],
+      "options": {
+        "tabWidth": 2,
+        "trailingComma": "es5"
+      }
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-interface State {
+export interface State {
   players: Player[];
   gridSize: number;
   food?: Point;
