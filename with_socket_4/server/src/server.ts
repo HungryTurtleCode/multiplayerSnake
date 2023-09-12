@@ -1,4 +1,7 @@
 import { Server } from "socket.io";
+import { FRAME_RATE } from "./constants";
+import { makeId } from "./utils";
+import { initGame, gameLoop, getUpdatedVelocity } from "./game.js";
 
 const io = new Server<
   ClientToServerEvents,
@@ -34,10 +37,6 @@ interface InterServerEvents {
 interface SocketData {
   playerNumber: number;
 }
-
-const { initGame, gameLoop, getUpdatedVelocity } = require("./game.js");
-const { FRAME_RATE } = require("./constants");
-const { makeId } = require("./utils");
 
 const states = new Map<string, State>();
 const clientRooms = new Map<string, string>();
@@ -105,12 +104,12 @@ io.on("connection", (client) => {
 
 function startGameInterval(roomName: string) {
   const intervalId = setInterval(() => {
-    const winner = gameLoop(states.get(roomName));
+    const winnerPlayerNumber = gameLoop(states.get(roomName));
 
-    if (!winner) {
+    if (!winnerPlayerNumber) {
       emitGameState(roomName, states.get(roomName));
     } else {
-      emitGameOver(roomName, winner);
+      emitGameOver(roomName, winnerPlayerNumber);
       states.delete(roomName);
       clearInterval(intervalId);
     }
@@ -122,8 +121,10 @@ function emitGameState(roomName: string, gameState: State) {
   io.sockets.in(roomName).emit("gameState", JSON.stringify(gameState));
 }
 
-function emitGameOver(roomName: string, winner: string) {
-  io.sockets.in(roomName).emit("gameOver", JSON.stringify({ winner }));
+function emitGameOver(roomName: string, winnerPlayerNumber: number) {
+  io.sockets
+    .in(roomName)
+    .emit("gameOver", JSON.stringify({ winnerPlayerNumber }));
 }
 
 io.listen(parseInt(process.env.PORT) || 3000);

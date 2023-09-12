@@ -1,57 +1,38 @@
-const { GRID_SIZE } = require("./constants");
+import { GRID_SIZE } from "./constants";
 
-module.exports = {
-  initGame,
-  gameLoop,
-  getUpdatedVelocity,
-};
-
-function initGame() {
+export function initGame(): State {
   const state = createGameState();
   randomFood(state);
   return state;
 }
 
-function createGameState() {
-  return {
-    players: [
-      {
-        pos: {
-          x: 3,
-          y: 10,
-        },
-        vel: {
-          x: 1,
-          y: 0,
-        },
-        snake: [
-          { x: 1, y: 10 },
-          { x: 2, y: 10 },
-          { x: 3, y: 10 },
-        ],
-      },
-      {
-        pos: {
-          x: 18,
-          y: 10,
-        },
-        vel: {
-          x: 0,
-          y: 0,
-        },
-        snake: [
-          { x: 20, y: 10 },
-          { x: 19, y: 10 },
-          { x: 18, y: 10 },
-        ],
-      },
-    ],
-    food: {},
-    gridSize: GRID_SIZE,
-  };
+export function getUpdatedVelocity(keyCode: number) {
+  switch (keyCode) {
+    case 37: {
+      // left
+      return { x: -1, y: 0 };
+    }
+    case 38: {
+      // down
+      return { x: 0, y: -1 };
+    }
+    case 39: {
+      // right
+      return { x: 1, y: 0 };
+    }
+    case 40: {
+      // up
+      return { x: 0, y: 1 };
+    }
+  }
 }
 
-function gameLoop(state) {
+/**
+ * Game loop
+ * @param state State
+ * @returns False or player number
+ */
+export function gameLoop(state: State): false | number {
   if (!state) {
     return;
   }
@@ -122,8 +103,46 @@ function gameLoop(state) {
   return false;
 }
 
-function randomFood(state) {
-  food = {
+function createGameState(): State {
+  return {
+    players: [
+      {
+        pos: {
+          x: 3,
+          y: 10,
+        },
+        vel: {
+          x: 1,
+          y: 0,
+        },
+        snake: [
+          { x: 1, y: 10 },
+          { x: 2, y: 10 },
+          { x: 3, y: 10 },
+        ],
+      },
+      {
+        pos: {
+          x: 18,
+          y: 10,
+        },
+        vel: {
+          x: 0,
+          y: 0,
+        },
+        snake: [
+          { x: 20, y: 10 },
+          { x: 19, y: 10 },
+          { x: 18, y: 10 },
+        ],
+      },
+    ],
+    gridSize: GRID_SIZE,
+  };
+}
+
+function randomFood(state: State) {
+  const food = {
     x: Math.floor(Math.random() * GRID_SIZE),
     y: Math.floor(Math.random() * GRID_SIZE),
   };
@@ -141,25 +160,4 @@ function randomFood(state) {
   }
 
   state.food = food;
-}
-
-function getUpdatedVelocity(keyCode) {
-  switch (keyCode) {
-    case 37: {
-      // left
-      return { x: -1, y: 0 };
-    }
-    case 38: {
-      // down
-      return { x: 0, y: -1 };
-    }
-    case 39: {
-      // right
-      return { x: 1, y: 0 };
-    }
-    case 40: {
-      // up
-      return { x: 0, y: 1 };
-    }
-  }
 }

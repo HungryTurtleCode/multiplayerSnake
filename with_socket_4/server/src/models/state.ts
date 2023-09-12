@@ -1,7 +1,7 @@
 interface State {
   players: Player[];
-  food: Point;
   gridSize: number;
+  food?: Point;
 }
 
 interface Player {
