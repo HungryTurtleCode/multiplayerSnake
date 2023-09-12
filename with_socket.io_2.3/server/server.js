@@ -41,7 +41,7 @@ io.on("connection", (client) => {
     clientRooms[client.id] = roomName;
 
     client.join(roomName);
-    client.number = 2;
+    client.playerNumber = 2;
     client.emit("init", 2);
 
     startGameInterval(roomName);
@@ -55,7 +55,7 @@ io.on("connection", (client) => {
     state[roomName] = initGame();
 
     client.join(roomName);
-    client.number = 1;
+    client.playerNumber = 1;
     client.emit("init", 1);
   }
 
@@ -74,7 +74,7 @@ io.on("connection", (client) => {
     const vel = getUpdatedVelocity(keyCode);
 
     if (vel) {
-      state[roomName].players[client.number - 1].vel = vel;
+      state[roomName].players[client.playerplayerNumber - 1].vel = vel;
     }
   }
 });
