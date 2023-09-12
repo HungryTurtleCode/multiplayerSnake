@@ -2,11 +2,17 @@
   "scripts": {
     "build": "npx tsc",
     "watch": "npx tsc -w",
-    "start": "node ./dist/server.js"
+    "start": "node ./dist/server.js",
+    "lint": "npx eslint ."
   },
   "dependencies": {
     "@types/socket.io": "^3.0.2",
     "socket.io": "^4.7.2",
     "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "eslint": "^8.49.0"
   }
 }
