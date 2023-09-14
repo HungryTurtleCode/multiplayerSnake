@@ -3,6 +3,7 @@
     "build": "npx tsc",
     "watch": "npx tsc -w",
     "start": "node dist/server.js",
+    "clean": "node ../tools/clean.mjs",
     "lint": "npx eslint ."
   },
   "dependencies": {
