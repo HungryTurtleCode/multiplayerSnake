@@ -2,7 +2,7 @@
   "scripts": {
     "build": "npx tsc",
     "watch": "npx tsc -w",
-    "start": "node ./dist/server.js",
+    "start": "node dist/server.js",
     "lint": "npx eslint ."
   },
   "dependencies": {

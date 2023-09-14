@@ -7,11 +7,11 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch Server",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "preLaunchTask": "Compile",
+            "preLaunchTask": "CompileServer",
             "program": "${workspaceFolder}\\server\\dist\\server.js"
         }
     ]
