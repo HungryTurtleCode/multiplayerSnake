@@ -5,9 +5,9 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch Server",
             "type": "node",
             "request": "launch",
-            "name": "Launch Server",
             "skipFiles": [
                 "<node_internals>/**"
             ],
