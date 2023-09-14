@@ -1,3 +1,6 @@
+import io from "socket.io-client";
+import { Player, State } from "./models/state";
+
 const BG_COLOR = "#231f20";
 const SNAKE_COLOR = "#c2c2c2";
 const FOOD_COLOR = "#e66916";
@@ -11,12 +14,18 @@ socket.on("gameCode", handleGameCode);
 socket.on("unknownCode", handleUnknownCode);
 socket.on("tooManyPlayers", handleTooManyPlayers);
 
-const gameScreen = document.getElementById("gameScreen");
-const initialScreen = document.getElementById("initialScreen");
-const newGameBtn = document.getElementById("newGameButton");
-const joinGameBtn = document.getElementById("joinGameButton");
-const gameCodeInput = document.getElementById("gameCodeInput");
-const gameCodeDisplay = document.getElementById("gameCodeDisplay");
+const gameScreen = <HTMLDivElement>document.getElementById("gameScreen");
+const initialScreen = <HTMLDivElement>document.getElementById("initialScreen");
+const newGameBtn = <HTMLButtonElement>document.getElementById("newGameButton");
+const joinGameBtn = <HTMLButtonElement>(
+  document.getElementById("joinGameButton")
+);
+const gameCodeInput = <HTMLInputElement>(
+  document.getElementById("gameCodeInput")
+);
+const gameCodeDisplay = <HTMLSpanElement>(
+  document.getElementById("gameCodeDisplay")
+);
 
 newGameBtn.addEventListener("click", newGame);
 joinGameBtn.addEventListener("click", joinGame);
@@ -32,19 +41,24 @@ function joinGame() {
   init();
 }
 
-let canvas, ctx;
-let playerNumber;
+let ctx: CanvasRenderingContext2D;
+let canvas: HTMLCanvasElement;
+let playerNumber: number | null;
 let gameActive = false;
 
 function init() {
-  initialScreen.style.display = "none";
-  gameScreen.style.display = "block";
+  if (initialScreen) {
+    initialScreen.style.display = "none";
+  }
 
-  canvas = document.getElementById("canvas");
-  ctx = canvas.getContext("2d");
+  if (gameScreen) {
+    gameScreen.style.display = "block";
+  }
 
+  canvas = <HTMLCanvasElement>document.getElementById("canvas");
   canvas.width = canvas.height = 600;
 
+  ctx = canvas.getContext("2d")!;
   ctx.fillStyle = BG_COLOR;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -52,11 +66,11 @@ function init() {
   gameActive = true;
 }
 
-function keydown(e) {
+function keydown(e: KeyboardEvent) {
   socket.emit("keydown", e.keyCode);
 }
 
-function paintGame(state) {
+function paintGame(state: State) {
   ctx.fillStyle = BG_COLOR;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -64,14 +78,16 @@ function paintGame(state) {
   const gridSize = state.gridSize;
   const size = canvas.width / gridSize;
 
-  ctx.fillStyle = FOOD_COLOR;
-  ctx.fillRect(food.x * size, food.y * size, size, size);
+  if (food) {
+    ctx.fillStyle = FOOD_COLOR;
+    ctx.fillRect(food.x * size, food.y * size, size, size);
+  }
 
   paintPlayer(state.players[0], size, SNAKE_COLOR);
   paintPlayer(state.players[1], size, "red");
 }
 
-function paintPlayer(playerState, size, color) {
+function paintPlayer(playerState: Player, size: number, color: string) {
   const snake = playerState.snake;
 
   ctx.fillStyle = color;
@@ -80,34 +96,34 @@ function paintPlayer(playerState, size, color) {
   }
 }
 
-function handleInit(number) {
+function handleInit(number: number) {
   playerNumber = number;
 }
 
-function handleGameState(gameState) {
+function handleGameState(gameState: string) {
   if (!gameActive) {
     return;
   }
-  gameState = JSON.parse(gameState);
-  requestAnimationFrame(() => paintGame(gameState));
+  const parsedState: State = JSON.parse(gameState);
+  requestAnimationFrame(() => paintGame(parsedState));
 }
 
-function handleGameOver(data) {
+function handleGameOver(data: string) {
   if (!gameActive) {
     return;
   }
-  data = JSON.parse(data);
+  const parsedData = JSON.parse(data);
 
   gameActive = false;
 
-  if (data.winner === playerNumber) {
+  if (parsedData.winnerPlayerNumber === playerNumber) {
     alert("You Win!");
   } else {
     alert("You Lose :(");
   }
 }
 
-function handleGameCode(gameCode) {
+function handleGameCode(gameCode: string) {
   gameCodeDisplay.innerText = gameCode;
 }
 
