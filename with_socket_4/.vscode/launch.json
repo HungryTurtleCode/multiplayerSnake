@@ -13,6 +13,18 @@
             ],
             "preLaunchTask": "CompileServer",
             "program": "${workspaceFolder}\\server\\dist\\server.js"
+        },
+        {
+            "name": "Launch Chrome after Webpack Dev",
+            "request": "launch",
+            "type": "chrome",
+            "url": "http://localhost:4000",
+            "webRoot": "${workspaceFolder}\\client",
+            "outFiles": [
+                "${workspaceRoot}/dist/**/*.js",
+                "!**/node_modules/**"
+            ],
+            "restart": "true"
         }
     ]
 }
